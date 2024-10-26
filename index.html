@@ -55,10 +55,54 @@
       margin-top: 20px;
       display: none;
     }
+
+    #sessionBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    height: 50px;
+    padding: 10px;
+    font-size: 16px;
+    color: #495057;
+    background-color: #f8f9fa;
+    cursor: pointer;
+} 
   </style>
 </head>
 <body>
   <div class="container mt-5">
+
+    <!-- Session name -->
+    <div class="container mt-5">
+      <!-- Session Box Styled as Text Input -->
+      <div id="sessionBox" class="mb-3">
+          Start New Session
+      </div>
+  </div>
+  
+  <!-- Bootstrap Modal for Session Name Input -->
+  <div class="modal fade" id="sessionModal" tabindex="-1" aria-labelledby="sessionModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="sessionModalLabel">New Session</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <div class="mb-3">
+                      <label for="sessionName" class="form-label">Enter Session Name</label>
+                      <input type="text" class="form-control" id="sessionName" placeholder="Session Name">
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" onclick="startSession()">Submit</button>
+              </div>
+          </div>
+      </div>
+  </div>
     <!-- Reset Button -->
     <button class="btn btn-secondary" id="resetBtn">Reset</button>
 
@@ -69,7 +113,7 @@
 
     <!-- Select File Button -->
     <button class="btn btn-info ml-3" id="selectFileBtn">
-      <i class="fas fa-file"></i> Select File
+      <i class="fas fa-file"></i> Select Session File
     </button>
 
     <!-- Uploaded Files Section -->
@@ -79,9 +123,9 @@
       <p class="upload-more-message" style="display: none;">You can upload more files by clicking "Add File" again.</p>
     </div>
     <!-- Selected Files Section -->
-    <div class="file-section-title">Selected Files</div>
+    <div class="file-section-title">Session Files</div>
     <div id="selectedFileList" class="mt-2">
-      <p class="empty-message">No files selected.</p>
+      <p class="empty-message">No files selected from uploaded files.</p>
        
     </div>
 
@@ -169,6 +213,36 @@
   <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 
   <script>
+    // Show Bootstrap modal when sessionBox is clicked
+document.getElementById('sessionBox').addEventListener('click', () => {
+    const sessionModal = new bootstrap.Modal(document.getElementById('sessionModal'));
+    sessionModal.show();
+});
+
+// Function to start a new session
+function startSession() {
+    const sessionName = document.getElementById('sessionName').value.trim();
+    if (sessionName) {
+        const now = new Date();
+        const formattedDate = now.getFullYear() + '-' +
+                              String(now.getMonth() + 1).padStart(2, '0') + '-' +
+                              String(now.getDate()).padStart(2, '0') + ' ' +
+                              String(now.getHours()).padStart(2, '0') + ':' +
+                              String(now.getMinutes()).padStart(2, '0') + ':' +
+                              String(now.getSeconds()).padStart(2, '0');
+        
+        document.getElementById('sessionBox').innerHTML = `<strong>${sessionName}</strong><br><small class="text-muted">${formattedDate}</small>`;
+
+        // Hide the modal after submission
+        const sessionModal = bootstrap.Modal.getInstance(document.getElementById('sessionModal'));
+        sessionModal.hide();
+    } else {
+        alert("Please enter a session name.");
+    }
+}
+
+
+    
     let filesArray = [];
     let selectedFilesArray = [];
 
@@ -340,10 +414,10 @@
       }
       
       // Validate message input
-      if (message === "") {
-        alert("Message field is optional but cannot be empty.");
-        return;
-      }
+      // if (message === "") {
+      //   alert("Message field is optional but cannot be empty.");
+      //   return;
+      // }
 
       // Clear previous results
       document.getElementById('resultTableBody').innerHTML = '';
