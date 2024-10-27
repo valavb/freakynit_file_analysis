@@ -74,35 +74,28 @@
 <body>
   <div class="container mt-5">
 
-    <!-- Session name -->
-    <div class="container mt-5">
-      <!-- Session Box Styled as Text Input -->
-      <div id="sessionBox" class="mb-3">
-          Start New Session
+    <!-- Textbox area -->
+<div class="container mt-5 mb-5">
+  <input type="text" id="textbox" class="form-control" value="Start New Session" style="cursor: pointer;">
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="sessionModal" tabindex="-1" aria-labelledby="sessionModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="sessionModalLabel">Enter Session Name</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
       </div>
-  </div>
-  
-  <!-- Bootstrap Modal for Session Name Input -->
-  <div class="modal fade" id="sessionModal" tabindex="-1" aria-labelledby="sessionModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="sessionModalLabel">New Session</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <div class="mb-3">
-                      <label for="sessionName" class="form-label">Enter Session Name</label>
-                      <input type="text" class="form-control" id="sessionName" placeholder="Session Name">
-                  </div>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary" onclick="startSession()">Submit</button>
-              </div>
-          </div>
+      <div class="modal-body">
+        <input type="text" id="sessionName" class="form-control" placeholder="Session Name">
       </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="submitSession()">Submit</button>
+      </div>
+    </div>
   </div>
+</div>
     <!-- Reset Button -->
     <button class="btn btn-secondary" id="resetBtn">Reset</button>
 
@@ -211,35 +204,25 @@
   <script src="cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
 
   <script>
-    // Show Bootstrap modal when sessionBox is clicked
-document.getElementById('sessionBox').addEventListener('click', () => {
-    const sessionModal = new bootstrap.Modal(document.getElementById('sessionModal'));
+    const textbox = document.getElementById("textbox");
+  const sessionModal = new bootstrap.Modal(document.getElementById("sessionModal"));
+
+  textbox.addEventListener("click", () => {
     sessionModal.show();
-});
+  });
 
-// Function to start a new session
-function startSession() {
-    const sessionName = document.getElementById('sessionName').value.trim();
-    if (sessionName) {
-        const now = new Date();
-        const formattedDate = now.getFullYear() + '-' +
-                              String(now.getMonth() + 1).padStart(2, '0') + '-' +
-                              String(now.getDate()).padStart(2, '0') + ' ' +
-                              String(now.getHours()).padStart(2, '0') + ':' +
-                              String(now.getMinutes()).padStart(2, '0') + ':' +
-                              String(now.getSeconds()).padStart(2, '0');
-        
-        document.getElementById('sessionBox').innerHTML = `<strong>${sessionName}</strong><br><small class="text-muted">${formattedDate}</small>`;
-
-        // Hide the modal after submission
-        const sessionModal = bootstrap.Modal.getInstance(document.getElementById('sessionModal'));
-        sessionModal.hide();
-    } else {
-        alert("Please enter a session name.");
-    }
-}
+  function submitSession() {
+    const sessionName = document.getElementById("sessionName").value;
+    const date = new Date();
+    const formattedDate = date.toISOString().replace('T', ' ').substring(0, 19);
+    textbox.value = `${sessionName} - ${formattedDate}`;
+    sessionModal.hide();
+  }
 
 
     
